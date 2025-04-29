@@ -1,27 +1,31 @@
 // controllers/statusController.js
 const deviceService = require('../services/deviceService');
-const config = require('../config/config');
+const { buscarTodosDispositivos } = require('../config/db-utils');
 
 exports.getStatus = async (req, res) => {
-  const statusDispositivos = [];
+    const statusDispositivos = [];
+    const dispositivos = await buscarTodosDispositivos();
 
-  for (let i = 0; i < config.dispositivos.length; i++) {
-    const link = deviceService.linkCatraca(i);
-    const dispositivo = config.dispositivos[i];
-    const session = await deviceService.obterSessao(link, i);
-
-    if (!session) {
-      statusDispositivos.push({ name: dispositivo.name, status: 'Erro ao obter sessão' });
-      continue;
+    if (!dispositivos) {
+      return res.status(500).json({ message: 'Erro ao buscar dispositivos do banco de dados' });
     }
 
-    const sessaoValida = await deviceService.verificarSessao(session, link);
-    if (sessaoValida) {
-      statusDispositivos.push({ name: dispositivo.name, status: 'Conectado com sucesso' });
-    } else {
-      statusDispositivos.push({ name: dispositivo.name, status: 'Sessão inválida' });
-    }
-  }
+    for (const dispositivo of dispositivos) {
+      const link = deviceService.linkCatraca(dispositivo);
+      const session = await deviceService.obterSessao(link, dispositivo);
 
-  res.json(statusDispositivos);
+      if (!session) {
+        statusDispositivos.push({ id: dispositivo.id, nome: dispositivo.nome, status: 'Erro ao obter sessão' });
+        continue;
+      }
+
+      const sessaoValida = await deviceService.verificarSessao(session, link);
+      if (sessaoValida) {
+        statusDispositivos.push({ id: dispositivo.id, nome: dispositivo.nome, status: 'Conectado com sucesso' });
+      } else {
+        statusDispositivos.push({ id: dispositivo.id, nome: dispositivo.nome, status: 'Sessão inválida' });
+      }
+    }
+
+    res.json(statusDispositivos);
 };

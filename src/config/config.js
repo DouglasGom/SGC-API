@@ -2,10 +2,11 @@
 module.exports = {
   dispositivos: [
     {
-      name: "Catraca 01",
-      ip: '192.168.0.126',
-      port: '81',
-      login: 'admin',
+      id: 1,
+      nome: "Catraca 01",
+      endereco: '192.168.0.126',
+      porta: '81',
+      usuario: 'admin',
       senha: 'admin'
     },
     {

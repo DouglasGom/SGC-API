@@ -1,11 +1,11 @@
 // app.js
 const express = require('express');
 const app = express();
-const statusRoutes = require('./routes/statusRoutes');
+const dispositivosRoutes = require('./routes/dispositivosRoutes');
 
 app.use(express.json());
 
 // Monta as rotas
-app.use('/', statusRoutes); // Ou um prefixo como '/api'
+app.use('/', dispositivosRoutes); // Ou um prefixo como '/api'
 
 module.exports = app;

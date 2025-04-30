@@ -29,7 +29,7 @@ async function verificarSessao(session, linkCatraca) {
 }
 
 module.exports = {
-    linkCatraca,
-    obterSessao,
-    verificarSessao
+  linkCatraca,
+  obterSessao,
+  verificarSessao
 };
